@@ -1,4 +1,4 @@
-#import "@preview/scienceicons:0.1.0": orcid-icon
+#import "@preview/scienceicons:0.1.0": orcid-icon, email-icon, github-icon, linkedin-icon, website-icon, mastodon-icon, bluesky-icon
 
 #let resume(
   author: "",
@@ -75,13 +75,37 @@
   // Level 1 Heading
   [= #(author)]
 
-  // Personal Info Helper
-  let contact-item(value, prefix: "", link-type: "") = {
+  /// add a given `prefix` to `value`; if `value` already start with prefix, do nothing
+  let prefix-with(prefix, value) = {
+    if value.starts-with(prefix) {
+      value
+    }
+    else {
+      prefix + value
+    }
+  }
+
+  /// Personal Info Helper
+  let contact-item(
+    value, 
+    /// icon of the field
+    icon:[], 
+    /// prefix of the input text
+    text-prefix: "", 
+    /// type of the url, like `"mailto:"` or `https://`
+    link-type: "", 
+    /// the website of the link, like `orcid.org` or `github.com`
+    link-prefix: "") = {
     if value != "" {
+      // icon cannot be prefixed, because `prefix-with` expect string, not content.
+      let text = icon + " " + prefix-with(text-prefix, value)
+      
       if link-type != "" {
-        link(link-type + value)[#(prefix + value)]
+        // the nested prefix with is essential
+        // if the user input `xxx`, `github.com/xxx`, or `https://github.com/xxx` will all link to the correct github account.
+        link(prefix-with(link-type, prefix-with(link-prefix, value)))[#text]
       } else {
-        value
+        text
       }
     }
   }
@@ -95,14 +119,14 @@
           contact-item(pronouns),
           contact-item(phone, link-type: "tel:"),
           contact-item(location),
-          contact-item(email, link-type: "mailto:"),
-          contact-item(github, link-type: "https://"),
-          contact-item(linkedin, link-type: "https://"),
-          contact-item(mastodon, link-type: "https://"),
+          contact-item(email, icon: [#email-icon()], link-type: "mailto:"),
+          contact-item(github, icon: [#github-icon()], link-type: "https://", link-prefix: "github.com/"),
+          contact-item(linkedin, icon: [#linkedin-icon(color: rgb("#0072b1"))], link-type: "https://", link-prefix: "linkedin.com/"),
+          contact-item(mastodon, icon: [#mastodon-icon(color: rgb("#6364ff"))], link-type: "https://"),
           contact-item(dblp, link-type: "https://"),
-          contact-item(codeberg, link-type: "https://"),
-          contact-item(personal-site, link-type: "https://"),
-          contact-item(orcid, prefix: [#orcid-icon(color: rgb("#AECD54"))orcid.org/], link-type: "https://orcid.org/"),
+          contact-item(codeberg, link-type: "https://", link-prefix: "codeberg.com"),
+          contact-item(personal-site, icon: [#website-icon()], link-type: "https://"),
+          contact-item(orcid, icon: [#orcid-icon(color: rgb("#AECD54"))], link-type: "https://", link-prefix: "orcid.org/"),
         )
         items.filter(x => x != none).join("  |  ")
       }
