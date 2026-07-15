@@ -98,8 +98,8 @@
     link-prefix: "") = {
     if value != "" {
       // icon cannot be prefixed, because `prefix-with` expect string, not content.
-      let text = icon + " " + prefix-with(text-prefix, value)
-      
+      let text = icon + [~] + prefix-with(text-prefix, value)
+
       if link-type != "" {
         // the nested prefix with is essential
         // if the user input `xxx`, `github.com/xxx`, or `https://github.com/xxx` will all link to the correct github account.
