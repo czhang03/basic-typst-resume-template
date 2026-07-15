@@ -11,6 +11,7 @@
   linkedin: "",
   mastodon: "",
   codeberg: "",
+  /// the dblp PID like "l/YannLeCun" or "92/1378-1".
   dblp:"",
   phone: "",
   personal-site: "",
@@ -123,8 +124,8 @@
           contact-item(github, icon: [#github-icon()], link-type: "https://", link-prefix: "github.com/"),
           contact-item(linkedin, icon: [#linkedin-icon(color: rgb("#0072b1"))], link-type: "https://", link-prefix: "linkedin.com/"),
           contact-item(mastodon, icon: [#mastodon-icon(color: rgb("#6364ff"))], link-type: "https://"),
-          contact-item(dblp, link-type: "https://"),
-          contact-item(codeberg, link-type: "https://", link-prefix: "codeberg.com"),
+          contact-item(dblp, text-prefix: "dblp.org/pid", link-type: "https://", link-prefix: "dblp.org/pid/"),
+          contact-item(codeberg, link-type: "https://", text-prefix: "codeberg.com/", link-prefix: "codeberg.com"),
           contact-item(personal-site, icon: [#website-icon()], link-type: "https://"),
           contact-item(orcid, icon: [#orcid-icon(color: rgb("#AECD54"))], link-type: "https://", link-prefix: "orcid.org/"),
         )
