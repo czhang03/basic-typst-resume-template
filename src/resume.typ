@@ -76,14 +76,20 @@
   // Level 1 Heading
   [= #(author)]
 
-  /// add a given `prefix` to `value`; if `value` already start with prefix, do nothing
-  let prefix-with(prefix, value) = {
-    if value.starts-with(prefix) {
-      value
+  /// add a collection of `prefixes` to `value`; if `value` already start with prefix, do nothing
+  let safe-prefix(prefixes, value) = {
+
+    // first remove all the prefixes from the value, until fail.
+    for prefix in prefixes {
+      let new_val = value.trim(prefix, at: start, repeat: false)
+      // terminate upon failure
+      if new_val == value { break }
+      value = new_val
     }
-    else {
-      prefix + value
-    }
+
+    // recover prefixes
+    prefixes.join("") + value
+
   }
 
   /// Personal Info Helper
@@ -98,13 +104,13 @@
     /// the website of the link, like `orcid.org` or `github.com`
     link-prefix: "") = {
     if value != "" {
-      // icon cannot be prefixed, because `prefix-with` expect string, not content.
-      let text = icon + [~] + prefix-with(text-prefix, value)
+      // icon cannot be prefixed, because `safe-prefix` expect string, not content.
+      let text = icon + [~] + safe-prefix((text-prefix,), value)
 
       if link-type != "" {
         // the nested prefix with is essential
         // if the user input `xxx`, `github.com/xxx`, or `https://github.com/xxx` will all link to the correct github account.
-        link(prefix-with(link-type, prefix-with(link-prefix, value)))[#text]
+        link(safe-prefix((link-prefix, link-type), value))[#text]
       } else {
         text
       }
